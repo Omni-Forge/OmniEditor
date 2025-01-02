@@ -97,8 +97,8 @@ const INFRA_TYPES = {
 // Connection bar component for parent/child relationships
 const ConnectionBar = ({ position, onStartConnection, onEndConnection, isActive, type }) => (
   <div
-    className={`absolute h-3 bg-blue-500 cursor-pointer hover:bg-blue-600 transition-colors
-                rounded-md ${isActive ? 'bg-blue-600' : ''} ${type === 'parent' ? 'parent-bar' : 'child-bar'}`}
+    className={`absolute h-3 bg-neutral-600 cursor-pointer hover:bg-neutral-500 transition-colors
+                rounded-md ${isActive ? 'bg-neutral-500' : ''} ${type === 'parent' ? 'parent-bar' : 'child-bar'}`}
     style={{
       left: '4px',
       right: '4px',
@@ -116,23 +116,23 @@ const ConnectionBar = ({ position, onStartConnection, onEndConnection, isActive,
       onEndConnection(type);
     }}
   >
-    <div className="absolute inset-0 bg-blue-400 opacity-0 hover:opacity-100 rounded-md transition-opacity" />
+    <div className="absolute inset-0 bg-neutral-500 opacity-0 hover:opacity-100 rounded-md transition-opacity" />
   </div>
 );
 
 // Navigation controls component
 const NavigationControls = ({ onZoomIn, onZoomOut, onResetZoom, onResetPan, zoom }) => (
-  <div className="absolute bottom-4 right-4 flex flex-col space-y-2 bg-white p-2 rounded-lg shadow-md">
-    <Button variant="outline" size="icon" onClick={onZoomIn}>
+  <div className="absolute bottom-4 right-4 flex flex-col space-y-2 bg-neutral-800 p-2 rounded-lg shadow-lg">
+    <Button variant="outline" size="icon" onClick={onZoomIn} className="border-neutral-600 hover:bg-neutral-700">
       <ZoomIn className="h-4 w-4" />
     </Button>
-    <Button variant="outline" size="icon" onClick={onZoomOut}>
+    <Button variant="outline" size="icon" onClick={onZoomOut} className="border-neutral-600 hover:bg-neutral-700">
       <ZoomOut className="h-4 w-4" />
     </Button>
-    <Button variant="outline" size="icon" onClick={() => { onResetZoom(); onResetPan(); }}>
+    <Button variant="outline" size="icon" onClick={() => { onResetZoom(); onResetPan(); }} className="border-neutral-600 hover:bg-neutral-700">
       <Move className="h-4 w-4" />
     </Button>
-    <div className="text-center text-sm text-gray-500">{Math.round(zoom * 100)}%</div>
+    <div className="text-center text-sm text-neutral-400">{Math.round(zoom * 100)}%</div>
   </div>
 );
 
@@ -420,228 +420,232 @@ const InfrastructureDesigner = () => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col space-y-4 p-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Infrastructure Designer</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-
-          <div className="flex space-x-4 mb-4">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="flex items-center">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Resource
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 max-h-96 overflow-y-auto">
-                <div className="p-2 sticky top-0 bg-white border-b">
-                  <Input
-                    placeholder="Search resources..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="mb-2"
-                  />
-                </div>
-                {Object.entries(filteredTypes).map(([category, types]) => (
-                  <div key={category}>
-                    <div className="px-2 py-1 text-sm font-semibold bg-gray-100 sticky top-14">
-                      {category.toUpperCase()}
-                    </div>
-                    {Object.entries(types).map(([typeKey, typeInfo]) => (
-                      <DropdownMenuItem
-                        key={typeKey}
-                        onClick={() => addNode(typeKey, typeInfo)}
-                        className="flex flex-col items-start"
-                      >
-                        <span className="font-medium">{typeInfo.name}</span>
-                        <span className="text-xs text-gray-500">{typeInfo.description}</span>
-                      </DropdownMenuItem>
-                    ))}
-                    <DropdownMenuSeparator />
+    <div className="w-full h-screen flex flex-col bg-neutral-900 text-neutral-100 select-none">
+      {/* Title bar */}
+      <div className="h-16 border-b border-neutral-800 flex items-center justify-between px-4 bg-neutral-900">
+        <h1 className="text-xl font-semibold">Infrastructure Designer</h1>
+        <div className="flex space-x-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="flex items-center bg-neutral-800 hover:bg-neutral-700">
+                <Plus className="w-4 h-4 mr-2" />
+                Add Resource
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-64 max-h-96 overflow-y-auto bg-neutral-800 border-neutral-700">
+              <div className="p-2 sticky top-0 bg-neutral-800 border-b border-neutral-700">
+                <Input
+                  placeholder="Search resources..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="bg-neutral-900 border-neutral-700"
+                />
+              </div>
+              {Object.entries(filteredTypes).map(([category, types]) => (
+                <div key={category}>
+                  <div className="px-2 py-1 text-sm font-semibold bg-neutral-800 sticky top-14">
+                    {category.toUpperCase()}
                   </div>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                  {Object.entries(types).map(([typeKey, typeInfo]) => (
+                    <DropdownMenuItem
+                      key={typeKey}
+                      onClick={() => addNode(typeKey, typeInfo)}
+                      className="flex flex-col items-start hover:bg-neutral-700"
+                    >
+                      <span className="font-medium">{typeInfo.name}</span>
+                      <span className="text-xs text-neutral-400">{typeInfo.description}</span>
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator className="bg-neutral-700" />
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-            <Button
-              onClick={handleExport}
-              className="flex items-center"
-              variant="outline"
-            >
-              <FileJson className="w-4 h-4 mr-2" />
-              Export JSON
-            </Button>
-          </div>
-
-          <div 
-            ref={canvasRef}
-            className="border rounded-lg h-96 relative overflow-hidden cursor-move bg-gray-50"
-            onMouseDown={handleCanvasMouseDown}
-            onMouseMove={handleCanvasMouseMove}
-            onMouseUp={handleCanvasMouseUp}
-            onMouseLeave={handleCanvasMouseUp}
-            onWheel={handleWheel}
+          <Button
+            onClick={handleExport}
+            className="flex items-center bg-neutral-800 hover:bg-neutral-700"
+            variant="outline"
           >
-            <div
-              className="absolute inset-0 origin-top-left"
-              style={{
-                transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`
-              }}
-            >
-              {/* Connection lines */}
-              <svg className="absolute inset-0 w-full h-full pointer-events-none">
-                {connections.map(conn => (
-                  <line
-                    key={conn.id}
-                    x1={conn.fromPoint.x}
-                    y1={conn.fromPoint.y}
-                    x2={conn.toPoint.x}
-                    y2={conn.toPoint.y}
-                    stroke="#6B7280"
-                    strokeWidth={2 / zoom}
+            <FileJson className="w-4 h-4 mr-2" />
+            Export JSON
+          </Button>
+        </div>
+      </div>
+
+      {/* Main content area */}
+      <div className="flex-1 flex">
+        {/* Graph canvas */}
+        <div 
+          ref={canvasRef}
+          className={`flex-1 relative overflow-hidden bg-neutral-900 ${isDraggingCanvas ? 'cursor-grabbing' : 'cursor-grab'}`}
+          onMouseDown={handleCanvasMouseDown}
+          onMouseMove={handleCanvasMouseMove}
+          onMouseUp={handleCanvasMouseUp}
+          onMouseLeave={(e) => {
+            if (isDraggingCanvas) {
+              e.preventDefault();
+              setIsDraggingCanvas(false);
+            }
+          }}
+          onWheel={handleWheel}
+        >
+          <div
+            className="absolute inset-0 origin-top-left"
+            style={{
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`
+            }}
+          >
+            {/* Connection lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none">
+              {connections.map(conn => (
+                <line
+                  key={conn.id}
+                  x1={conn.fromPoint.x}
+                  y1={conn.fromPoint.y}
+                  x2={conn.toPoint.x}
+                  y2={conn.toPoint.y}
+                  stroke="#525252"
+                  strokeWidth={2 / zoom}
+                />
+              ))}
+              {tempLine && (
+                <line
+                  x1={tempLine.fromPoint.x}
+                  y1={tempLine.fromPoint.y}
+                  x2={tempLine.toPoint.x}
+                  y2={tempLine.toPoint.y}
+                  stroke="#525252"
+                  strokeWidth={2 / zoom}
+                  strokeDasharray="4"
+                />
+              )}
+            </svg>
+
+            {/* Nodes */}
+            {nodes.map(node => {
+              const isSelected = selectedNode?.id === node.id;
+              return (
+                <div
+                  key={node.id}
+                  className={`absolute border-2 rounded-lg bg-neutral-800 cursor-move shadow-lg
+                            ${isSelected ? 'border-neutral-500' : 'border-neutral-700'}
+                            hover:border-neutral-600 transition-colors`}
+                  style={{
+                    left: node.position.x,
+                    top: node.position.y,
+                    width: '160px',
+                    height: '80px'
+                  }}
+                  onMouseDown={(e) => handleNodeMouseDown(e, node.id)}
+                  onMouseMove={(e) => handleNodeDrag(e, node.id)}
+                  onMouseUp={handleNodeMouseUp}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedNode(node);
+                  }}
+                >
+                  <ConnectionBar
+                    position={getConnectionPoint(node, 'parent')}
+                    onStartConnection={(point) => startConnection(node.id, point, 'parent')}
+                    onEndConnection={() => endConnection(node.id, 'parent')}
+                    isActive={isDrawing}
+                    type="parent"
                   />
-                ))}
-                {tempLine && (
-                  <line
-                    x1={tempLine.fromPoint.x}
-                    y1={tempLine.fromPoint.y}
-                    x2={tempLine.toPoint.x}
-                    y2={tempLine.toPoint.y}
-                    stroke="#6B7280"
-                    strokeWidth={2 / zoom}
-                    strokeDasharray="4"
+
+                  <ConnectionBar
+                    position={getConnectionPoint(node, 'child')}
+                    onStartConnection={(point) => startConnection(node.id, point, 'child')}
+                    onEndConnection={() => endConnection(node.id, 'child')}
+                    isActive={isDrawing}
+                    type="child"
                   />
-                )}
-              </svg>
 
-              {/* Nodes */}
-              {nodes.map(node => {
-                const isSelected = selectedNode?.id === node.id;
-                return (
-                  <div
-                    key={node.id}
-                    className={`absolute border-2 rounded-lg bg-white cursor-move shadow-sm
-                              ${isSelected ? 'border-blue-500' : 'border-gray-200'}
-                              hover:border-blue-300 transition-colors`}
-                    style={{
-                      left: node.position.x,
-                      top: node.position.y,
-                      width: '160px',
-                      height: '80px'
-                    }}
-                    onMouseDown={(e) => handleNodeMouseDown(e, node.id)}
-                    onMouseMove={(e) => handleNodeDrag(e, node.id)}
-                    onMouseUp={handleNodeMouseUp}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedNode(node);
-                    }}
-                  >
-                    <ConnectionBar
-                      position={getConnectionPoint(node, 'parent')}
-                      onStartConnection={(point) => startConnection(node.id, point, 'parent')}
-                      onEndConnection={() => endConnection(node.id, 'parent')}
-                      isActive={isDrawing}
-                      type="parent"
-                    />
-
-                    <ConnectionBar
-                      position={getConnectionPoint(node, 'child')}
-                      onStartConnection={(point) => startConnection(node.id, point, 'child')}
-                      onEndConnection={() => endConnection(node.id, 'child')}
-                      isActive={isDrawing}
-                      type="child"
-                    />
-
-                    <div className="absolute top-2 right-2 z-30">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 hover:bg-red-100"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteNode(node.id);
-                        }}
-                      >
-                        <X className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </div>
-
-                    <div className="p-2 h-full flex flex-col justify-center items-center">
-                      <div className="text-sm font-medium text-center truncate w-full px-2">
-                        {node.name}
-                      </div>
-                      <div className="text-xs text-gray-500 text-center truncate w-full px-2">
-                        {INFRA_TYPES[node.config.category][node.type].name}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <NavigationControls 
-              onZoomIn={() => setZoom(z => Math.min(2, z * 1.2))}
-              onZoomOut={() => setZoom(z => Math.max(0.1, z * 0.8))}
-              onResetZoom={() => setZoom(1)}
-              onResetPan={() => setPan({ x: 0, y: 0 })}
-              zoom={zoom}
-            />
-          </div>
-
-          {/* Properties panel */}
-          {selectedNode && (
-            <Card className="mt-4">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">Resource Properties</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Name</label>
-                    <Input 
-                      value={selectedNode.name}
-                      onChange={(e) => {
-                        setNodes(nodes.map(node =>
-                          node.id === selectedNode.id
-                            ? { ...node, name: e.target.value }
-                            : node
-                        ));
-                        setSelectedNode(prev => ({
-                          ...prev,
-                          name: e.target.value
-                        }));
+                  <div className="absolute top-2 right-2 z-30">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6 hover:bg-red-900/50"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deleteNode(node.id);
                       }}
-                    />
+                    >
+                      <X className="h-4 w-4 text-red-400" />
+                    </Button>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Type</label>
-                    <Input 
-                      value={INFRA_TYPES[selectedNode.config.category][selectedNode.type].name}
-                      disabled
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Category</label>
-                    <Input 
-                      value={selectedNode.config.category}
-                      disabled
-                    />
+
+                  <div className="p-2 h-full flex flex-col justify-center items-center">
+                    <div className="text-sm font-medium text-center truncate w-full px-2 text-neutral-100">
+                      {node.name}
+                    </div>
+                    <div className="text-xs text-neutral-400 text-center truncate w-full px-2">
+                      {INFRA_TYPES[node.config.category][node.type].name}
+                    </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              );
+            })}
+          </div>
+
+          <NavigationControls 
+            onZoomIn={() => setZoom(z => Math.min(2, z * 1.2))}
+            onZoomOut={() => setZoom(z => Math.max(0.1, z * 0.8))}
+            onResetZoom={() => setZoom(1)}
+            onResetPan={() => setPan({ x: 0, y: 0 })}
+            zoom={zoom}
+          />
+        </div>
+
+        {/* Right-hand properties panel */}
+        <div className="w-80 border-l border-neutral-800 bg-neutral-900">
+          {selectedNode ? (
+            <div className="p-4">
+              <h2 className="text-lg font-semibold mb-4">Resource Properties</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-neutral-300">Name</label>
+                  <Input 
+                    value={selectedNode.name}
+                    onChange={(e) => {
+                      setNodes(nodes.map(node =>
+                        node.id === selectedNode.id
+                          ? { ...node, name: e.target.value }
+                          : node
+                      ));
+                      setSelectedNode(prev => ({
+                        ...prev,
+                        name: e.target.value
+                      }));
+                    }}
+                    className="bg-neutral-800 border-neutral-700 text-neutral-100"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-neutral-300">Type</label>
+                  <Input 
+                    value={INFRA_TYPES[selectedNode.config.category][selectedNode.type].name}
+                    disabled
+                    className="bg-neutral-800 border-neutral-700 text-neutral-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-neutral-300">Category</label>
+                  <Input 
+                    value={selectedNode.config.category}
+                    disabled
+                    className="bg-neutral-800 border-neutral-700 text-neutral-400"
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 text-neutral-500 text-center">
+              Select a resource to view its properties
+            </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
